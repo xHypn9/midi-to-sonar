@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Melanchall.DryWetMidi" Version="8.0.3" />
+    <ProjectReference Include="..\SonarController.Core\SonarController.Core.csproj" />
+  </ItemGroup>
+</Project>

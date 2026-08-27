@@ -1,0 +1,17 @@
+[Bb]in/
+[Oo]bj/
+.vs/
+.idea/
+TestResults/
+artifacts/
+release/
+installer/output/
+
+*.user
+*.suo
+*.pdb
+*.log
+
+# Local application data must never be committed.
+settings.json
+midi-mappings.json

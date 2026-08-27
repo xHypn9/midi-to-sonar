@@ -1,0 +1,215 @@
+<Window x:Class="SonarMidiController.App.WidgetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MIDI to Sonar Widget"
+        Width="590"
+        Height="380"
+        MinWidth="360"
+        MinHeight="232"
+        MaxWidth="1180"
+        MaxHeight="760"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ShowInTaskbar="False"
+        Topmost="True"
+        WindowStartupLocation="Manual">
+    <Window.Resources>
+        <Style x:Key="ChannelNameStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#F8FAFC" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <Style x:Key="ValueStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#CBD5E1" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,7,0,8" />
+        </Style>
+
+        <Style x:Key="MuteWidgetStyle" TargetType="ToggleButton">
+            <Setter Property="Width" Value="82" />
+            <Setter Property="Height" Value="38" />
+            <Setter Property="Content" Value="MUTE" />
+            <Setter Property="Foreground" Value="#D9FF43" />
+            <Setter Property="Background" Value="#CC252B33" />
+            <Setter Property="BorderBrush" Value="#66717D8C" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#D9FF43" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#E6BE123C" />
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#FFFF496C" />
+                                <Setter TargetName="ButtonBorder" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#FFFF174F"
+                                                          BlurRadius="24"
+                                                          ShadowDepth="0"
+                                                          Opacity="0.95" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FaderTrackStyle" TargetType="Border">
+            <Setter Property="Width" Value="54" />
+            <Setter Property="Height" Value="195" />
+            <Setter Property="CornerRadius" Value="7" />
+            <Setter Property="BorderBrush" Value="#805B6472" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#B512171E" Offset="0" />
+                        <GradientStop Color="#D52C1119" Offset="0.5" />
+                        <GradientStop Color="#B512171E" Offset="1" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FaderHandleStyle" TargetType="Border">
+            <Setter Property="Width" Value="44" />
+            <Setter Property="Height" Value="7" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Background" Value="#FFFF365F" />
+            <Setter Property="BorderBrush" Value="#FFFFA0B5" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#FFFF174F"
+                                      BlurRadius="12"
+                                      ShadowDepth="0"
+                                      Opacity="0.85" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Viewbox Stretch="Fill">
+            <Grid Width="590" Height="380">
+                <Border x:Name="WidgetBackground"
+                        Margin="16"
+                        Background="#D911151C"
+                        BorderBrush="#805A6574"
+                        BorderThickness="1"
+                        CornerRadius="14"
+                        MouseLeftButtonDown="DragArea_MouseLeftButtonDown">
+                    <Grid Margin="18,18,18,32">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="GAME" Style="{StaticResource ChannelNameStyle}" />
+                            <Border Style="{StaticResource FaderTrackStyle}">
+                                <Canvas x:Name="GameTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
+                                    <Border x:Name="GameHandle" Style="{StaticResource FaderHandleStyle}" />
+                                </Canvas>
+                            </Border>
+                            <TextBlock x:Name="GameValue" Text="--%" Style="{StaticResource ValueStyle}" />
+                            <ToggleButton x:Name="GameMute" Tag="Game" Style="{StaticResource MuteWidgetStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="CHAT" Style="{StaticResource ChannelNameStyle}" />
+                            <Border Style="{StaticResource FaderTrackStyle}">
+                                <Canvas x:Name="ChatTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
+                                    <Border x:Name="ChatHandle" Style="{StaticResource FaderHandleStyle}" />
+                                </Canvas>
+                            </Border>
+                            <TextBlock x:Name="ChatValue" Text="--%" Style="{StaticResource ValueStyle}" />
+                            <ToggleButton x:Name="ChatMute" Tag="Chat" Style="{StaticResource MuteWidgetStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="MEDIA" Style="{StaticResource ChannelNameStyle}" />
+                            <Border Style="{StaticResource FaderTrackStyle}">
+                                <Canvas x:Name="MediaTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
+                                    <Border x:Name="MediaHandle" Style="{StaticResource FaderHandleStyle}" />
+                                </Canvas>
+                            </Border>
+                            <TextBlock x:Name="MediaValue" Text="--%" Style="{StaticResource ValueStyle}" />
+                            <ToggleButton x:Name="MediaMute" Tag="Media" Style="{StaticResource MuteWidgetStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Text="AUX" Style="{StaticResource ChannelNameStyle}" />
+                            <Border Style="{StaticResource FaderTrackStyle}">
+                                <Canvas x:Name="AuxTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
+                                    <Border x:Name="AuxHandle" Style="{StaticResource FaderHandleStyle}" />
+                                </Canvas>
+                            </Border>
+                            <TextBlock x:Name="AuxValue" Text="--%" Style="{StaticResource ValueStyle}" />
+                            <ToggleButton x:Name="AuxMute" Tag="Aux" Style="{StaticResource MuteWidgetStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4">
+                            <TextBlock Text="MIC" Style="{StaticResource ChannelNameStyle}" />
+                            <Border Style="{StaticResource FaderTrackStyle}">
+                                <Canvas x:Name="MicTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
+                                    <Border x:Name="MicHandle" Style="{StaticResource FaderHandleStyle}" />
+                                </Canvas>
+                            </Border>
+                            <TextBlock x:Name="MicValue" Text="--%" Style="{StaticResource ValueStyle}" />
+                            <ToggleButton x:Name="MicMute" Tag="Mic" Style="{StaticResource MuteWidgetStyle}" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Viewbox>
+
+        <Thumb x:Name="ResizeThumb"
+               Width="30"
+               Height="30"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Background="Transparent"
+               Cursor="SizeNWSE"
+               DragDelta="ResizeThumb_DragDelta">
+            <Thumb.Template>
+                <ControlTemplate TargetType="Thumb">
+                    <Grid Background="Transparent">
+                        <Path Data="M 8,26 L 26,8 M 15,26 L 26,15 M 22,26 L 26,22"
+                              Stroke="#806B7788"
+                              StrokeThickness="1.4"
+                              StrokeStartLineCap="Round"
+                              StrokeEndLineCap="Round" />
+                    </Grid>
+                </ControlTemplate>
+            </Thumb.Template>
+        </Thumb>
+    </Grid>
+</Window>

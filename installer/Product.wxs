@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="MIDI to Sonar"
+           Manufacturer="SimoWork"
+           Version="$(ProductVersion)"
+           Language="1040"
+           Scope="perMachine"
+           InstallerVersion="500"
+           UpgradeCode="27758ae5-4b16-4bbc-97fc-fcc8f72a215e">
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of MIDI to Sonar is already installed." />
+
+    <Icon Id="MidiToSonarIcon" SourceFile="$(IconFile)" />
+    <Property Id="ARPPRODUCTICON" Value="MidiToSonarIcon" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Midi2Sonar">
+        <Component Id="MainApplication"
+                   Guid="791ed30a-8c56-41c1-a026-cf4aa49f5bf7"
+                   Bitness="always64">
+          <File Id="MidiToSonarExecutable"
+                Source="$(SourceExe)"
+                Name="MIDI to Sonar.exe"
+                KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="Midi2Sonar">
+        <Component Id="StartMenuShortcutComponent"
+                   Guid="4b79e83f-e635-401e-b300-b3538e766be2">
+          <Shortcut Id="StartMenuShortcut"
+                    Name="MIDI to Sonar"
+                    Description="Control SteelSeries Sonar with a MIDI device"
+                    Target="[INSTALLFOLDER]MIDI to Sonar.exe"
+                    WorkingDirectory="INSTALLFOLDER"
+                    Icon="MidiToSonarIcon"
+                    Advertise="no" />
+          <RemoveFolder Id="RemoveApplicationProgramsFolder"
+                        Directory="ApplicationProgramsFolder"
+                        On="uninstall" />
+          <RegistryValue Root="HKCU"
+                         Key="Software\SimoWork\Midi2Sonar"
+                         Name="StartMenuShortcut"
+                         Type="integer"
+                         Value="1"
+                         KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder">
+      <Component Id="DesktopShortcutComponent"
+                 Guid="320e0267-2602-498a-84c4-905e00cdfa13">
+        <Shortcut Id="DesktopShortcut"
+                  Name="MIDI to Sonar"
+                  Description="Control SteelSeries Sonar with a MIDI device"
+                  Target="[INSTALLFOLDER]MIDI to Sonar.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="MidiToSonarIcon"
+                  Advertise="no" />
+        <RegistryValue Root="HKCU"
+                       Key="Software\SimoWork\Midi2Sonar"
+                       Name="DesktopShortcut"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes" />
+      </Component>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="MIDI to Sonar" Level="1">
+      <ComponentRef Id="MainApplication" />
+      <ComponentRef Id="StartMenuShortcutComponent" />
+      <ComponentRef Id="DesktopShortcutComponent" />
+    </Feature>
+  </Package>
+</Wix>
