@@ -72,8 +72,6 @@ game, hook DirectX, inspect another process, read or write game memory, automate
 mouse/keyboard input, or modify game files. Anti-cheat policies remain controlled
 by each game publisher, so compatibility cannot be guaranteed for every title.
 
-The main window displays `© SimoWork` followed by the current year reported by Windows.
-
 ## CLI test
 
 ```powershell
