@@ -4,7 +4,7 @@
         Title="MIDI to Sonar Settings"
         Icon="Assets/MidiToSonar.ico"
         Width="470"
-        Height="540"
+        Height="590"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#181B20"
@@ -144,6 +144,9 @@
                       Content="Start with Windows" />
             <CheckBox x:Name="StartMinimizedCheckBox"
                       Content="Start minimized" />
+            <CheckBox x:Name="DiscordStreamAutoMuteCheckBox"
+                      Content="Discord Stream Auto-Mute"
+                      ToolTip="Mute only Discord playback sessions on SteelSeries Sonar - Microphone. Disabling does not unmute existing sessions." />
             <CheckBox x:Name="ShowWidgetCheckBox"
                       Content="Overlay widget" />
             <CheckBox x:Name="LockWidgetCheckBox">

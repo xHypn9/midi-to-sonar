@@ -2,8 +2,9 @@
 
 Windows WPF application that controls the **SteelSeries GG Sonar classic mixer**
 with a MIDI controller through Sonar's local loopback HTTP API. It does not use
-the Windows mixer, UI automation, code injection, game hooks or screen
-coordinates.
+UI automation, code injection, game hooks or screen coordinates. The optional
+Discord Stream Auto-Mute feature uses Windows Core Audio for one narrowly
+selected playback session; MIDI mixer control continues to use Sonar HTTP.
 
 ## Download
 
@@ -60,6 +61,35 @@ The **Settings** window supports:
 - showing the semi-transparent always-on-top mixer widget;
 - locking the widget in a click-through mode that does not take mouse focus;
 - opening the local data folder.
+- Discord Stream Auto-Mute (enabled by default).
+
+## Discord Stream Auto-Mute
+
+Every second, an independent MTA worker checks active **playback** endpoints
+whose friendly name exactly matches `SteelSeries Sonar - Microphone` or the
+Windows full name `SteelSeries Sonar - Microphone (SteelSeries Sonar Virtual Audio Device)`.
+It mutes only sessions whose PID belongs to a Discord, Discord PTB or Discord
+Canary executable with Discord company metadata and a valid Authenticode
+signature issued to `Discord Inc.`. Display names alone are never trusted.
+Signature verification is local and does not request network access. Unverifiable
+executables are skipped; inspection errors are logged at most once per minute.
+
+The worker never enumerates capture endpoints, changes endpoint mute/volume,
+or writes Sonar mixer settings. It checks the current session mute before writing.
+Sessions and endpoints are enumerated anew each pass and COM objects are released
+on the worker thread, so Discord/Sonar restarts do not leave cached sessions or PIDs.
+There is no automatic unmute when disabling the feature or exiting the app.
+While enabled, manually unmuting a matching session causes it to be muted again.
+
+Use **Settings → Discord Stream Auto-Mute → Save**, or set
+`"discordStreamAutoMute": false` in `settings.json` while the app is closed.
+Existing settings without this property default to `true`.
+
+This deliberately excludes capture sessions, including Discord voice input.
+If Windows exposes the unwanted stream only as a capture session or under a
+different/renamed endpoint, it will not be muted. If Discord shares multiple
+streams in one playback session, Core Audio cannot mute them individually.
+Confirm the behavior with the [manual test procedure](docs/DISCORD_AUTO_MUTE.md).
 
 The widget shows live Game, Chat, Media, Aux and Microphone levels, provides a
 glowing read-only mute indicator for every channel, opens on the second display when possible,

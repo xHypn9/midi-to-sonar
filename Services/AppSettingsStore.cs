@@ -5,6 +5,8 @@ namespace SonarMidiController.App.Services;
 
 public sealed class AppSettings
 {
+    public bool DiscordStreamAutoMute { get; set; } = true;
+
     public bool StartWithWindows { get; set; }
 
     public bool StartMinimized { get; set; }

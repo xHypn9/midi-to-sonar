@@ -41,6 +41,7 @@ public sealed class SettingsWindowTests
 
                 Assert.NotNull(Find<CheckBox>(window, "StartWithWindowsCheckBox").IsChecked);
                 Assert.True(Find<CheckBox>(window, "StartMinimizedCheckBox").IsChecked);
+                Assert.True(Find<CheckBox>(window, "DiscordStreamAutoMuteCheckBox").IsChecked);
                 Assert.True(Find<CheckBox>(window, "ShowWidgetCheckBox").IsChecked);
                 Assert.True(Find<CheckBox>(window, "LockWidgetCheckBox").IsChecked);
                 Assert.Equal(42, Find<Slider>(window, "BackgroundOpacitySlider").Value);

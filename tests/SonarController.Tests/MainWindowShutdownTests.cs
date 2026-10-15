@@ -27,6 +27,9 @@ public sealed class MainWindowShutdownTests
                     Path.GetTempPath(),
                     "SonarMidiControllerTests",
                     Guid.NewGuid().ToString("N"));
+                // UI shutdown tests must not mute sessions belonging to the real desktop.
+                new SonarMidiController.App.Services.AppSettingsStore(testDataDirectory)
+                    .Save(new SonarMidiController.App.Services.AppSettings { DiscordStreamAutoMute = false });
                 window = new MainWindow(testDataDirectory);
                 application.MainWindow = window;
                 window.Show();

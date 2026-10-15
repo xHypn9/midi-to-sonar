@@ -34,6 +34,7 @@ public partial class SettingsWindow : Window
             StartWithWindowsCheckBox.ToolTip = "Disabled in the separate diagnostic build.";
         }
         StartMinimizedCheckBox.IsChecked = settings.StartMinimized;
+        DiscordStreamAutoMuteCheckBox.IsChecked = settings.DiscordStreamAutoMute;
         ShowWidgetCheckBox.IsChecked = settings.ShowWidget;
         LockWidgetCheckBox.IsChecked = settings.LockWidget;
         BackgroundOpacitySlider.Value = settings.WidgetBackgroundOpacity;
@@ -69,6 +70,7 @@ public partial class SettingsWindow : Window
         settings.StartWithWindows = !RuntimeProfile.IsDiagnostic &&
             StartWithWindowsCheckBox.IsChecked == true;
         settings.StartMinimized = StartMinimizedCheckBox.IsChecked == true;
+        settings.DiscordStreamAutoMute = DiscordStreamAutoMuteCheckBox.IsChecked == true;
         settings.ShowWidget = ShowWidgetCheckBox.IsChecked == true;
         settings.LockWidget = LockWidgetCheckBox.IsChecked == true;
         settings.WidgetBackgroundOpacity = Math.Round(BackgroundOpacitySlider.Value);

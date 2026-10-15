@@ -8,11 +8,11 @@
     <Nullable>enable</Nullable>
     <AssemblyName>SteelSeriesSonarMidiController</AssemblyName>
     <RootNamespace>SonarMidiController.App</RootNamespace>
-    <Version Condition="'$(DiagnosticBuild)' != 'true'">1.3.5</Version>
-    <Version Condition="'$(DiagnosticBuild)' == 'true'">1.3.5-diagnostic.1</Version>
-    <AssemblyVersion>1.3.5.0</AssemblyVersion>
-    <FileVersion Condition="'$(DiagnosticBuild)' != 'true'">1.3.5.0</FileVersion>
-    <FileVersion Condition="'$(DiagnosticBuild)' == 'true'">1.3.5.1</FileVersion>
+    <Version Condition="'$(DiagnosticBuild)' != 'true'">1.3.6</Version>
+    <Version Condition="'$(DiagnosticBuild)' == 'true'">1.3.6-diagnostic.1</Version>
+    <AssemblyVersion>1.3.6.0</AssemblyVersion>
+    <FileVersion Condition="'$(DiagnosticBuild)' != 'true'">1.3.6.0</FileVersion>
+    <FileVersion Condition="'$(DiagnosticBuild)' == 'true'">1.3.6.1</FileVersion>
     <DefineConstants Condition="'$(DiagnosticBuild)' == 'true'">$(DefineConstants);DIAGNOSTIC_BUILD</DefineConstants>
     <ApplicationIcon>Assets\MidiToSonar.ico</ApplicationIcon>
     <DefaultItemExcludes>$(DefaultItemExcludes);src\**;tests\**;tools\**</DefaultItemExcludes>

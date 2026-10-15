@@ -18,6 +18,7 @@ namespace SonarMidiController.App;
 public partial class MainWindow : Window
 {
     private readonly FileSonarLogger _logger;
+    private readonly DiscordStreamAutoMuteService _discordAutoMute;
     private readonly SteelSeriesSonarController _controller;
     private readonly MidiInputService _midiInput;
     private readonly MidiRouter _midiRouter;
@@ -60,6 +61,8 @@ public partial class MainWindow : Window
             "sonar-controller.log"));
         _settingsStore = new AppSettingsStore(effectiveDataDirectory);
         var settings = _settingsStore.Load();
+        _discordAutoMute = new DiscordStreamAutoMuteService(_logger);
+        _discordAutoMute.SetEnabled(settings.DiscordStreamAutoMute);
         var arguments = Environment.GetCommandLineArgs();
         var forceShow = arguments.Any(argument =>
             argument.Equals("--show", StringComparison.OrdinalIgnoreCase));
@@ -398,6 +401,7 @@ public partial class MainWindow : Window
         if (settingsWindow.ShowDialog() == true)
         {
             ApplyWidgetSettings(settingsWindow.SavedSettings);
+            _discordAutoMute.SetEnabled(settingsWindow.SavedSettings.DiscordStreamAutoMute);
         }
     }
 
@@ -669,6 +673,7 @@ public partial class MainWindow : Window
         }
         _closed = true;
         _pollTimer.Stop();
+        _discordAutoMute.Dispose();
         _midiRouter.VolumeChanged -= OnMidiVolumeChanged;
         _widgetWindow?.CloseForApplicationExit();
         _widgetWindow = null;
