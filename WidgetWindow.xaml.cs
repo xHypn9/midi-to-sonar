@@ -40,6 +40,8 @@ public partial class WidgetWindow : Window
     private readonly DispatcherTimer _displaySettleTimer;
     private readonly Dictionary<SonarChannel, WidgetControls> _controls;
     private readonly Dictionary<SonarChannel, double> _volumes = new();
+    private CancellationTokenSource? _batteryMonitor;
+    private bool _showWirelessBattery;
     private bool _isLocked;
     private bool _allowClose;
     private bool _positionReady;
@@ -86,6 +88,7 @@ public partial class WidgetWindow : Window
         _displaySettleTimer.Tick += (_, _) => CompleteDisplayConfigurationChange();
 
         ApplyVisualSettings(_settingsStore.Load());
+        IsVisibleChanged += (_, _) => UpdateBatteryMonitor();
         SourceInitialized += OnSourceInitialized;
         Loaded += OnLoaded;
         LocationChanged += OnGeometryChanged;
@@ -174,6 +177,63 @@ public partial class WidgetWindow : Window
         {
             controls.Mute.Opacity = muteOpacity;
         }
+
+        _showWirelessBattery = settings.ShowWirelessBattery;
+        UpdateBatteryMonitor();
+    }
+
+    private void UpdateBatteryMonitor()
+    {
+        BatteryStrip.Visibility = _showWirelessBattery ? Visibility.Visible : Visibility.Collapsed;
+        if (!_showWirelessBattery || !IsVisible)
+        {
+            _batteryMonitor?.Cancel();
+            BatteryItems.ItemsSource = null;
+            return;
+        }
+
+        if (_batteryMonitor is null)
+        {
+            BatteryStatus.Text = "Reading batteries…";
+            var monitor = new CancellationTokenSource();
+            _batteryMonitor = monitor;
+            _ = Dispatcher.InvokeAsync(() => MonitorBatteriesAsync(monitor), DispatcherPriority.Background);
+        }
+    }
+
+    private async Task MonitorBatteriesAsync(CancellationTokenSource monitor)
+    {
+        var token = monitor.Token;
+        using var timer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+        try
+        {
+            do
+            {
+                var batteries = await Task.Run(() => WirelessBatteryReader.ReadAsync(token), token);
+                token.ThrowIfCancellationRequested();
+                BatteryItems.ItemsSource = batteries;
+                BatteryStatus.Text = batteries.Length == 0 ? "No supported accessories detected" : "";
+            }
+            while (await timer.WaitForNextTickAsync(token));
+        }
+        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        {
+        }
+        catch (Exception ex)
+        {
+            BatteryItems.ItemsSource = null;
+            BatteryStatus.Text = "Battery status unavailable";
+            _logger.Error("Wireless battery", "Unable to read battery status.", ex);
+        }
+        finally
+        {
+            _batteryMonitor = null;
+            monitor.Dispose();
+            if (token.IsCancellationRequested)
+            {
+                UpdateBatteryMonitor();
+            }
+        }
     }
 
     public void CloseForApplicationExit()
@@ -204,6 +264,8 @@ public partial class WidgetWindow : Window
 
     private void OnClosed(object? sender, EventArgs e)
     {
+        _showWirelessBattery = false;
+        UpdateBatteryMonitor();
         _positionSaveTimer.Stop();
         _topmostHealthTimer.Stop();
         _displaySettleTimer.Stop();

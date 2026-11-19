@@ -36,6 +36,7 @@ public partial class SettingsWindow : Window
         StartMinimizedCheckBox.IsChecked = settings.StartMinimized;
         DiscordStreamAutoMuteCheckBox.IsChecked = settings.DiscordStreamAutoMute;
         ShowWidgetCheckBox.IsChecked = settings.ShowWidget;
+        ShowWirelessBatteryCheckBox.IsChecked = settings.ShowWirelessBattery;
         LockWidgetCheckBox.IsChecked = settings.LockWidget;
         BackgroundOpacitySlider.Value = settings.WidgetBackgroundOpacity;
         MuteOpacitySlider.Value = settings.WidgetMuteOpacity;
@@ -72,6 +73,7 @@ public partial class SettingsWindow : Window
         settings.StartMinimized = StartMinimizedCheckBox.IsChecked == true;
         settings.DiscordStreamAutoMute = DiscordStreamAutoMuteCheckBox.IsChecked == true;
         settings.ShowWidget = ShowWidgetCheckBox.IsChecked == true;
+        settings.ShowWirelessBattery = ShowWirelessBatteryCheckBox.IsChecked == true;
         settings.LockWidget = LockWidgetCheckBox.IsChecked == true;
         settings.WidgetBackgroundOpacity = Math.Round(BackgroundOpacitySlider.Value);
         settings.WidgetMuteOpacity = Math.Round(MuteOpacitySlider.Value);

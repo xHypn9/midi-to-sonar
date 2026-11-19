@@ -12,6 +12,7 @@ public sealed class AppSettings
     public bool StartMinimized { get; set; }
 
     public bool ShowWidget { get; set; }
+    public bool ShowWirelessBattery { get; set; }
 
     public bool LockWidget { get; set; }
 

@@ -6,7 +6,7 @@ public static class RuntimeProfile
 {
 #if DIAGNOSTIC_BUILD
     public static bool IsDiagnostic => true;
-    public const string DisplayName = "MIDI to Sonar [Diagnostic 1.3.5]";
+    public const string DisplayName = "MIDI to Sonar [Diagnostic 1.3.7]";
     public const string MutexName = "Local\\SimoWork.Midi2Sonar.Diagnostic.SingleInstance";
     public const string PipeName = "SimoWork.Midi2Sonar.Diagnostic.Activation";
     private const string DataDirectoryName = "SonarMidiController-Diagnostic";

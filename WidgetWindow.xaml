@@ -123,7 +123,21 @@
                         BorderThickness="1"
                         CornerRadius="14"
                         MouseLeftButtonDown="DragArea_MouseLeftButtonDown">
-                    <Grid Margin="18,18,18,32">
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="Margin" Value="18,18,18,32" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Visibility, ElementName=BatteryStrip}" Value="Visible">
+                                        <Setter Property="Margin" Value="18,12,18,14" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -132,7 +146,33 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0">
+                        <Grid x:Name="BatteryStrip" Grid.ColumnSpan="5" Height="26"
+                              VerticalAlignment="Top" Visibility="Collapsed">
+                            <TextBlock x:Name="BatteryStatus" HorizontalAlignment="Center"
+                                       Foreground="#F8FAFC" FontSize="12" />
+                            <ItemsControl x:Name="BatteryItems" HorizontalAlignment="Center">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="8,0"
+                                                    TextElement.Foreground="#F8FAFC"
+                                                    ToolTip="{Binding Description}"
+                                                    AutomationProperties.Name="{Binding Description}">
+                                            <TextBlock Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets"
+                                                       FontSize="14" VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding DisplayLevel}" Margin="6,0,0,0"
+                                                       FontSize="13" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0">
                             <TextBlock Text="GAME" Style="{StaticResource ChannelNameStyle}" />
                             <Border Style="{StaticResource FaderTrackStyle}">
                                 <Canvas x:Name="GameTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
@@ -143,7 +183,7 @@
                             <ToggleButton x:Name="GameMute" Tag="Game" Style="{StaticResource MuteWidgetStyle}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1">
+                        <StackPanel Grid.Row="1" Grid.Column="1">
                             <TextBlock Text="CHAT" Style="{StaticResource ChannelNameStyle}" />
                             <Border Style="{StaticResource FaderTrackStyle}">
                                 <Canvas x:Name="ChatTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
@@ -154,7 +194,7 @@
                             <ToggleButton x:Name="ChatMute" Tag="Chat" Style="{StaticResource MuteWidgetStyle}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Column="2">
+                        <StackPanel Grid.Row="1" Grid.Column="2">
                             <TextBlock Text="MEDIA" Style="{StaticResource ChannelNameStyle}" />
                             <Border Style="{StaticResource FaderTrackStyle}">
                                 <Canvas x:Name="MediaTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
@@ -165,7 +205,7 @@
                             <ToggleButton x:Name="MediaMute" Tag="Media" Style="{StaticResource MuteWidgetStyle}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Column="3">
+                        <StackPanel Grid.Row="1" Grid.Column="3">
                             <TextBlock Text="AUX" Style="{StaticResource ChannelNameStyle}" />
                             <Border Style="{StaticResource FaderTrackStyle}">
                                 <Canvas x:Name="AuxTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">
@@ -176,7 +216,7 @@
                             <ToggleButton x:Name="AuxMute" Tag="Aux" Style="{StaticResource MuteWidgetStyle}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Column="4">
+                        <StackPanel Grid.Row="1" Grid.Column="4">
                             <TextBlock Text="MIC" Style="{StaticResource ChannelNameStyle}" />
                             <Border Style="{StaticResource FaderTrackStyle}">
                                 <Canvas x:Name="MicTrack" Width="52" Height="193" SizeChanged="Track_SizeChanged">

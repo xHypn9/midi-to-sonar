@@ -4,7 +4,7 @@
         Title="MIDI to Sonar Settings"
         Icon="Assets/MidiToSonar.ico"
         Width="470"
-        Height="590"
+        Height="636"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="#181B20"
@@ -149,6 +149,9 @@
                       ToolTip="Mute only Discord playback sessions on SteelSeries Sonar - Microphone. Disabling does not unmute existing sessions." />
             <CheckBox x:Name="ShowWidgetCheckBox"
                       Content="Overlay widget" />
+            <CheckBox x:Name="ShowWirelessBatteryCheckBox"
+                      Content="Show battery (wireless accessories)"
+                      IsEnabled="{Binding IsChecked, ElementName=ShowWidgetCheckBox}" />
             <CheckBox x:Name="LockWidgetCheckBox">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="&#xE72E;"
